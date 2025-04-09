@@ -1,4 +1,4 @@
-Secure Messaging System with User Authentication
+🔐 Secure Messaging System with User Authentication
 This project implements a secure end-to-end messaging system that features robust user authentication, device registration, and encrypted communication between users using modern cryptographic algorithms. It simulates both server-side logic and client-side behavior in a single Python module.
 
 🚀 Features
@@ -122,3 +122,9 @@ pip install cryptography brotli
  Implement message delivery receipts
 
  Persist users/messages to a database
+
+👨‍💻 Author
+Developed by Ayushman Sharan as a demonstration of secure messaging principles.
+
+📝 License
+This project is licensed under the MIT License. See LICENSE file for details.
