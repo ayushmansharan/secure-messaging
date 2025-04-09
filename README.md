@@ -1,130 +1,111 @@
-🔐 Secure Messaging System with User Authentication
-This project implements a secure end-to-end messaging system that features robust user authentication, device registration, and encrypted communication between users using modern cryptographic algorithms. It simulates both server-side logic and client-side behavior in a single Python module.
+# Secure Messaging System with User Authentication
 
-🚀 Features
-✅ User Registration with Salted Password Hashing (using SHA256 as a placeholder for Argon2id)
+## Overview
+This project implements a secure messaging system that provides:
 
-✅ Secure Device Registration (X25519 key pairs)
+- **User authentication** using salted password hashing (simulated Argon2id)
+- **Device registration** with X25519 key pairs
+- **Session management** with session tokens
+- **End-to-end encrypted messaging** using ChaCha20-Poly1305 and simulated key exchange
+- **Message compression** using Brotli
 
-✅ Session-based Authentication (Token-based)
+The system is built in Python and consists of a server-side simulation class (`SecureMessagingSystem`) and a client-side interface (`SecureMessagingClient`).
 
-✅ End-to-End Encrypted Messaging (ChaCha20-Poly1305)
+---
 
-✅ Message Compression (Brotli)
+## Features
 
-✅ Per-Device Message Queueing and Retrieval
+### User Registration and Authentication
+- New users can register with a username, password, and device ID.
+- Passwords are hashed with salt using SHA256 as a placeholder for Argon2id.
+- Login creates a session token with 24-hour expiry.
+- Account lockout after 5 failed attempts.
 
-✅ Message Decryption (Client-side simulation)
+### Device Registration
+- Devices are uniquely identified and can be registered per user.
+- Each device has an X25519 key pair for secure communication.
 
-✅ Account Lockout on Multiple Failed Attempts
+### Session Management
+- Sessions are validated before any secure action.
+- Session tokens are stored with creation, expiry, and last active time.
 
-🧠 Tech Stack & Cryptographic Primitives
-Ed25519: Identity key pair for signing
+### Secure Messaging
+- Messages are encrypted with ChaCha20-Poly1305 using randomly generated keys.
+- Messages are compressed using Brotli before encryption.
+- Each message is accompanied by a unique ID and metadata.
 
-X25519: Ephemeral key exchange for secure device communication
+### Secure Channels
+- Secure channels simulate key exchanges and are uniquely identified by a channel ID.
 
-ChaCha20Poly1305: AEAD encryption for fast and secure message delivery
+---
 
-HMAC & SHA256: Secure password validation (SHA256 used as placeholder for Argon2id)
+## How It Works
 
-Brotli: Compression for message content
+### Client Workflow
+1. Register account with username, password, and device.
+2. Login to obtain a session token.
+3. Register the device with a name.
+4. Establish a secure channel with a recipient.
+5. Send and receive encrypted messages.
+6. Decrypt received messages on the client side.
 
-Secrets: Cryptographically secure random token generation
+### Server Workflow
+- Maintains users, devices, sessions, and message queues.
+- Handles message encryption, delivery, and session validation.
 
-🧪 Components
-📡 Server - SecureMessagingSystem
-Handles:
+---
 
-User and device registration
+## Requirements
+- Python 3.6+
+- `cryptography` library
+- `brotli` compression library
 
-Authentication and session token issuance
+Install dependencies using:
+```bash
+pip install cryptography brotli
+```
 
-Secure channel initiation
+---
 
-Encrypted message sending
-
-Message queuing and retrieval
-
-Decryption (for simulation/testing only)
-
-💻 Client - SecureMessagingClient
-Simulates:
-
-Registering an account and a device
-
-Logging in with session token management
-
-Establishing secure channels with contacts
-
-Sending and receiving encrypted messages
-
-📦 Example Usage
-python
-Copy
-Edit
-# Initialize server
+## Example Usage
+```python
 server = SecureMessagingSystem()
+alice = SecureMessagingClient(server, "alice", "alice_device")
+bob = SecureMessagingClient(server, "bob", "bob_device")
 
-# Create clients
-alice = SecureMessagingClient(server, "alice", "alice_phone_1")
-bob = SecureMessagingClient(server, "bob", "bob_phone_1")
+alice.register_account("alice_password")
+bob.register_account("bob_password")
 
-# Register users
-alice.register_account("alice_secure_password")
-bob.register_account("bob_secure_password")
+alice.login("alice_password")
+bob.login("bob_password")
 
-# Authenticate users
-alice.login("alice_secure_password")
-bob.login("bob_secure_password")
-
-# Register devices (if needed)
 alice.register_device("Alice's Phone")
 bob.register_device("Bob's Phone")
 
-# Establish channel and send message
-alice.establish_secure_channel("bob", "bob_phone_1")
-alice.send_message("bob", "bob_phone_1", "Hey Bob! Secure message incoming.")
+alice.establish_secure_channel("bob", "bob_device")
+alice.send_message("bob", "bob_device", "Hello Bob!")
 
-# Bob checks messages
-bob_messages = bob.check_messages()
-print(bob_messages)
-🔐 Security Notes
-🔒 Password hashing uses SHA256 only for demonstration. In production, use argon2id via argon2-cffi or similar libraries.
+received = bob.check_messages()
+print(received)
+```
 
-🔒 This system does not implement a full Double Ratchet protocol (like Signal) but provides a simplified, secure approach to key exchange and message encryption.
+---
 
-🔒 Private keys are simulated to be stored securely — in practice, these should be stored in secure enclaves or device keychains.
+## Limitations
+- Argon2id is simulated using SHA256; not suitable for production.
+- Key exchange and session key derivation are simplified.
+- No persistent storage or actual networking is implemented.
 
-📁 File Structure
-plaintext
-Copy
-Edit
-secure_messaging.py   # Full implementation including server and client classes
-README.md             # You're reading it!
-🛠️ Dependencies
-cryptography
+---
 
-brotli
+## Future Improvements
+- Use actual Argon2id for password hashing.
+- Implement Double Ratchet Algorithm for perfect forward secrecy.
+- Add persistent storage (e.g., database).
+- Build a RESTful API or socket interface for real-time messaging.
+- Add UI/UX layer for usability.
 
-Install them using pip:
+---
 
-bash
-Copy
-Edit
-pip install cryptography brotli
-📌 To Do / Possible Improvements
- Replace SHA256 with Argon2id for password hashing
-
- Add proper key exchange using X3DH or Double Ratchet (for full end-to-end encryption)
-
- Add group messaging support
-
- Implement message delivery receipts
-
- Persist users/messages to a database
-
-👨‍💻 Author
-Developed by Ayushman Sharan as a demonstration of secure messaging principles.
-
-📝 License
-This project is licensed under the MIT License. See LICENSE file for details.
+## License
+This project is provided for educational purposes and is not intended for production use. Modify and use at your own discretion.
